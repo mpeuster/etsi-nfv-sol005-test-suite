@@ -54,7 +54,7 @@ class BaseTest(unittest.TestCase):
         exit(1)
 
     def setUp(self):
-        pass
+        self.adaptor.setUp()
 
     def tearDown(self):
-        pass
+        self.adaptor.tearDown()

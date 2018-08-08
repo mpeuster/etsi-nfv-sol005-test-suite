@@ -45,9 +45,9 @@ class OsmAdaptor(BaseAdaptor):
         # initialize base adaptor
         super(OsmAdaptor, self).__init__(*args, **kwargs)
         # initialize OSM adaptor
-        self.osmclient = None
+        self.osmclient_cls = None
         if (not self._safe_import_osmclient()
-                or self.osmclient is None):
+                or self.osmclient_cls is None):
             exit(1)
 
     def _safe_import_osmclient(self):
@@ -57,13 +57,17 @@ class OsmAdaptor(BaseAdaptor):
         try:
             import osmclient
             LOG.debug("Found OSM client: {}".format(osmclient))
-            from osmclient.sol005 import client as osm_sol005_client
-            self.osmclient = osm_sol005_client.Client(host=self.api_url)
+            from osmclient.sol005.client import Client as OsmSol005Client
+            self.osmclient_cls = OsmSol005Client
             return True
         except BaseException as e:
             LOG.error(str(e))
             LOG.error(OSM_MISSING)
         return False
 
+    def setUp(self):
+        self.osm = self.osmclient_cls(self.api_url)
+
     def check_connection(self):
-        pass
+        # does a vnfd list to check connection
+        return isinstance(self.osm.vnfd.list(), list)

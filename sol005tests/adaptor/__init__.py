@@ -36,3 +36,9 @@ class BaseAdaptor(object):
         self.api_url = api_url
         LOG.info("Initializing '{}' pointing to '{}'"
                  .format(self.__class__.__name__, self.api_url))
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass

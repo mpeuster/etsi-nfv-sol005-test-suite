@@ -52,3 +52,9 @@ pytest
 # enable logging output
 pytest --log-cli-level DEBUG
 ```
+
+
+## Manual style check
+```sh
+flake8 --exclude .eggs sol005tests
+```
