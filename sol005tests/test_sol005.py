@@ -34,4 +34,4 @@ LOG = logging.getLogger(os.path.basename(__file__))
 class Sol005_BaiscTest(BaseTest):
 
     def test_connection(self):
-        self.assertTrue(True)
+        self.assertTrue(self.adaptor.check_connection())

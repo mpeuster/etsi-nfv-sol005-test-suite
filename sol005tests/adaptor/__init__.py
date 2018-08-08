@@ -34,5 +34,5 @@ class BaseAdaptor(object):
 
     def __init__(self, api_url):
         self.api_url = api_url
-        LOG.info("Initialized '{}' pointing to '{}'"
+        LOG.info("Initializing '{}' pointing to '{}'"
                  .format(self.__class__.__name__, self.api_url))

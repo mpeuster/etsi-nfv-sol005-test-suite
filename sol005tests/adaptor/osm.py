@@ -31,5 +31,39 @@ from sol005tests.adaptor import BaseAdaptor
 LOG = logging.getLogger(os.path.basename(__file__))
 
 
+OSM_MISSING = "Attention: 'osmclient' not installed on this system. \
+The OsmAdaptor won't be able to work. \
+Please install 'osmclient': https://osm.etsi.org/wikipub/index.php/OsmClient"
+
+
 class OsmAdaptor(BaseAdaptor):
-    pass
+    """
+    Adaptor uses osmclient to connect to OSM's NBI.
+    """
+
+    def __init__(self, *args, **kwargs):
+        # initialize base adaptor
+        super(OsmAdaptor, self).__init__(*args, **kwargs)
+        # initialize OSM adaptor
+        self.osmclient = None
+        if (not self._safe_import_osmclient()
+                or self.osmclient is None):
+            exit(1)
+
+    def _safe_import_osmclient(self):
+        """
+        We need the osmclient package on the system.
+        """
+        try:
+            import osmclient
+            LOG.debug("Found OSM client: {}".format(osmclient))
+            from osmclient.sol005 import client as osm_sol005_client
+            self.osmclient = osm_sol005_client.Client(host=self.api_url)
+            return True
+        except BaseException as e:
+            LOG.error(str(e))
+            LOG.error(OSM_MISSING)
+        return False
+
+    def check_connection(self):
+        pass
