@@ -51,6 +51,9 @@ pytest
 
 # enable logging output
 pytest --log-cli-level DEBUG
+
+# if you have version conflicts, try:
+python3 -m pytest
 ```
 
 
