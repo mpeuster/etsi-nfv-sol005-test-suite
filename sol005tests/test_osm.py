@@ -43,7 +43,38 @@ class Osm_BaiscTest(BaseTest):
 
 
 class OsmVimManagementInterface(BaseTest):
-    pass
+
+    def test_vim_create(self):
+        name, passed = self.adaptor.vim_create("test_vim_create")
+        self.assertTrue(passed)
+
+    def test_vim_list(self):
+        # 0
+        r = self.adaptor.vim_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 0)
+        # 1
+        self.adaptor.vim_create("test_vim_list_1")
+        r = self.adaptor.vim_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 1)
+        # 2
+        self.adaptor.vim_create("test_vim_list_2")
+        r = self.adaptor.vim_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 2)
+
+    def test_vim_show(self):
+        name, _ = self.adaptor.vim_create("test_vim_show")
+        r = self.adaptor.vim_show(name)
+        self.assertIsNotNone(r)
+        self.assertTrue(isinstance(r, dict))
+        self.assertNotEqual(len(r), 0)
+
+    def test_vim_delete(self):
+        name, _ = self.adaptor.vim_create("test_vim_delete")
+        r = self.adaptor.vim_delete(name)
+        self.assertTrue(r)
 
 
 class OsmVnfManagementInterface(BaseTest):

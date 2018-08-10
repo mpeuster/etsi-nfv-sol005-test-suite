@@ -86,25 +86,54 @@ class OsmAdaptor(BaseAdaptor):
         """
         # delete all NSs
         for ns in self.osm.ns.list():
-            LOG.debug(
-                "tearDown: Deleting NS instance '{}'".format(ns.get("name")))
-            self.osm.nsd.delete(ns.get("name"))
+            self.ns_delete(ns.get("name"))
         # delete all NSDs
         for nsd in self.osm.nsd.list():
-            LOG.debug("tearDown: Deleting NSD '{}'".format(nsd.get("name")))
-            self.osm.nsd.delete(nsd.get("name"))
+            self.nsd_delete(nsd.get("name"))
         # delete all VNFDs
         for vnfd in self.osm.vnfd.list():
-            LOG.debug("tearDown: Deleting VNFD '{}'".format(vnfd.get("name")))
-            self.osm.vnfd.delete(vnfd.get("name"))
+            self.vnfd_delete(vnfd.get("name"))
         # delete all VIMs
         for vim in self.osm.vim.list():
-            LOG.debug("tearDown: Deleting VIM '{}'".format(vim.get("name")))
-            self.osm.nsd.delete(vim.get("name"))
+            self.vim_delete(vim.get("name"))
 
     def check_connection(self):
         # does a vnfd list to check connection
         return isinstance(self.osm.vnfd.list(), list)
+
+    def vim_create(self, name):
+        """
+        Example for vim_access dict:
+        {'config': None,
+         'vim-url': 'http://10.0.0.117:6001/v2.0',
+         'description': 'no description',
+         'vim-tenant-name': 'tenantName',
+         'vim-type': 'openstack',
+         'vim-password': 'password',
+         'vim-username': 'username'}
+        """
+        vim_access = {"vim-type": self.env_conf.get("vim_type"),
+                      "vim-url": self.env_conf.get("vim_url"),
+                      "vim-tenant-name": self.env_conf.get("vim_tenant"),
+                      "vim-username": self.env_conf.get("vim_user"),
+                      "vim-password": self.env_conf.get("vim_password"),
+                      "config": None,
+                      "description": "etsi-sol005-test-suite-vim"}
+        r = self.osm.vim.create(name, vim_access)
+        LOG.debug("OSM created VIM: {} using {}".format(name, vim_access))
+        return (name, r is None)
+
+    def vim_list(self):
+        return [vim.get("name") for vim in self.osm.vim.list()]
+
+    def vim_show(self, name):
+        r = self.osm.vim.get(name)
+        return r
+
+    def vim_delete(self, name):
+        LOG.debug("OSM deleting VIM '{}'".format(name))
+        r = self.osm.vim.delete(name)
+        return r is None
 
     def nsd_create(self):
         # osm requires to first create the constituent VNFs
@@ -124,6 +153,7 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def nsd_delete(self, name):
+        LOG.debug("OSM deleting NSD '{}'".format(name))
         r = self.osm.nsd.delete(name)
         return r is None
 
@@ -144,5 +174,11 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def vnfd_delete(self, name):
+        LOG.debug("OSM deleting VNFD '{}'".format(name))
         r = self.osm.vnfd.delete(name)
+        return r is None
+
+    def ns_delete(self, name):
+        LOG.debug("OSM deleting NS instance '{}'".format(name))
+        r = self.osm.ns.delete(name)
         return r is None

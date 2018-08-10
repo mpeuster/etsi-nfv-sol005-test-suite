@@ -50,6 +50,11 @@ class Sol005_NsdManagementInterface(BaseTest):
         self.assertTrue(passed)
 
     def test_nsd_list(self):
+        # 0
+        r = self.adaptor.nsd_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 0)
+        # 1
         self.adaptor.nsd_create()
         r = self.adaptor.nsd_list()
         self.assertTrue(isinstance(r, list))
@@ -76,12 +81,16 @@ class Sol005_VnfPackageManagementInterface(BaseTest):
         return name
 
     def test_vnfd_list(self):
-        # 1st
+        # 0
+        r = self.adaptor.vnfd_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 0)
+        # 1
         self.adaptor.vnfd_create()
         r = self.adaptor.vnfd_list()
         self.assertTrue(isinstance(r, list))
         self.assertEqual(len(r), 1)
-        # 2nd
+        # 2
         self.adaptor.vnfd_create(which="pong")
         r = self.adaptor.vnfd_list()
         self.assertTrue(isinstance(r, list))
