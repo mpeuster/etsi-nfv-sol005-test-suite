@@ -25,6 +25,8 @@
 # partner consortium (www.5gtango.eu).
 import logging
 import os
+import time
+import subprocess
 from sol005tests.adaptor import BaseAdaptor
 from sol005tests import fixtures
 
@@ -137,13 +139,13 @@ class OsmAdaptor(BaseAdaptor):
 
     def nsd_create(self):
         # osm requires to first create the constituent VNFs
-        self.osm.vnfd.create(
-            filename=TST_PACKAGE_VNF_PING, overwrite=True)
-        self.osm.vnfd.create(
-            filename=TST_PACKAGE_VNF_PONG, overwrite=True)
+        name = OSM_PINGPONG_NSD_NAME
+        self.vnfd_create()
+        self.vnfd_create(which="pong")
         r = self.osm.nsd.create(
             filename=TST_PACKAGE_NSD, overwrite=True)
-        return (OSM_PINGPONG_NSD_NAME, r is None)
+        LOG.debug("OSM created NSD: {}".format(name))
+        return (name, r is None)
 
     def nsd_list(self):
         return [nsd.get("name") for nsd in self.osm.nsd.list()]
@@ -164,6 +166,7 @@ class OsmAdaptor(BaseAdaptor):
         else:
             r = self.osm.vnfd.create(
                     filename=TST_PACKAGE_VNF_PONG, overwrite=True)
+        LOG.debug("OSM created VNFD: {}".format(which))
         return (which, r is None)
 
     def vnfd_list(self):
@@ -178,7 +181,38 @@ class OsmAdaptor(BaseAdaptor):
         r = self.osm.vnfd.delete(name)
         return r is None
 
+    def ns_create(self, name):
+        # 1. create a vim
+        vim, _ = self.vim_create("testvim")
+        # 2. on-board VNFDs and NSD
+        nsd, _ = self.nsd_create()
+        time.sleep(5)
+        # 3. instantiate the service
+        # r = self.osm.ns.create(OSM_PINGPONG_NSD_NAME, name, vim)
+        # above Python call does not work, but this one does ...:
+        cmd = ("osm ns-create --nsd_name {} --ns_name {} --vim_account {}"
+               .format(nsd, name, vim))
+        LOG.debug("executing: {}".format(cmd))
+        subprocess.check_call(cmd, shell=True)
+        # 4. wait for instantiation
+        time.sleep(60)
+        # 5. return result
+        LOG.debug("OSM created NS: {}".format(name))
+        return (name, True)
+
+    def ns_list(self):
+        return [ns.get("name") for ns in self.osm.ns.list()]
+
+    def ns_show(self, name):
+        pass
+
     def ns_delete(self, name):
         LOG.debug("OSM deleting NS instance '{}'".format(name))
         r = self.osm.ns.delete(name)
         return r is None
+
+    def vnf_list(self):
+        pass
+
+    def vnf_show(self, name):
+        pass

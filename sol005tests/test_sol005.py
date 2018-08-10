@@ -110,7 +110,24 @@ class Sol005_VnfPackageManagementInterface(BaseTest):
 
 
 class Sol005_NsLifecycleManagementInterface(BaseTest):
-    pass
+
+    def test_ns_create(self):
+        name, passed = self.adaptor.ns_create("test1")
+        self.assertTrue(passed)
+
+    def test_ns_list(self):
+        # 0
+        r = self.adaptor.ns_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 0)
+        # 1
+        # TODO
+
+    def test_ns_show(self):
+        pass
+
+    def test_ns_delete(self):
+        pass
 
 
 class Sol005_NsPerformanceManagementInterface(BaseTest):
