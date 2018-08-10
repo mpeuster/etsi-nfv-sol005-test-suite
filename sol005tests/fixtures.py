@@ -23,57 +23,17 @@
 # the Horizon 2020 and 5G-PPP programmes. The authors would like to
 # acknowledge the contributions of their colleagues of the SONATA
 # partner consortium (www.5gtango.eu).
-
-#
-# This module implements tests for the interfaces that are officially
-# part of the ETSI SOL005 specification. Each high-level interface is
-# encapsulated in its own BaseTest class.
-#
 import logging
 import os
-from sol005tests import BaseTest
-from sol005tests import fixtures
 
 
 LOG = logging.getLogger(os.path.basename(__file__))
 
 
-TST_PACKAGE_NSD = fixtures.get_file("pingpong_nsd.tar.gz")
-TST_PACKAGE_VNF_PING = fixtures.get_file("ping.tar.gz")
-TST_PACKAGE_VNF_PONG = fixtures.get_file("pong.tar.gz")
-
-
-class Sol005_BaiscTest(BaseTest):
-
-    def test_connection(self):
-        self.assertTrue(self.adaptor.check_connection())
-
-
-class Sol005_NsdManagementInterface(BaseTest):
-
-    def test_nsd_create(self):
-        LOG.debug(TST_PACKAGE_NSD)
-        LOG.debug(TST_PACKAGE_VNF_PING)
-        LOG.debug(TST_PACKAGE_VNF_PONG)
-
-
-class Sol005_VnfPackageManagementInterface(BaseTest):
-    pass
-
-
-class Sol005_NsLifecycleManagementInterface(BaseTest):
-    pass
-
-
-class Sol005_NsPerformanceManagementInterface(BaseTest):
+def get_file(filename):
     """
-    Not yet implemented.
+    Returns absolute path to given file in fixtures/ folder.
     """
-    pass
-
-
-class Sol005_NsFaultManagementInterface(BaseTest):
-    """
-    Not yet implemented.
-    """
-    pass
+    abs_path = os.path.dirname(__file__).replace(
+        "sol005tests", "")
+    return os.path.join(abs_path, "fixtures/{}".format(filename))
