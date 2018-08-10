@@ -26,6 +26,7 @@
 import logging
 import os
 from sol005tests.adaptor import BaseAdaptor
+from sol005tests import fixtures
 
 
 LOG = logging.getLogger(os.path.basename(__file__))
@@ -34,6 +35,12 @@ LOG = logging.getLogger(os.path.basename(__file__))
 OSM_MISSING = "Attention: 'osmclient' not installed on this system. \
 The OsmAdaptor won't be able to work. \
 Please install 'osmclient': https://osm.etsi.org/wikipub/index.php/OsmClient"
+
+
+# fixtures: OSM test packages
+TST_PACKAGE_NSD = fixtures.get_file("osm_pingpong_nsd.tar.gz")
+TST_PACKAGE_VNF_PING = fixtures.get_file("osm_ping.tar.gz")
+TST_PACKAGE_VNF_PONG = fixtures.get_file("osm_pong.tar.gz")
 
 
 class OsmAdaptor(BaseAdaptor):
@@ -71,3 +78,17 @@ class OsmAdaptor(BaseAdaptor):
     def check_connection(self):
         # does a vnfd list to check connection
         return isinstance(self.osm.vnfd.list(), list)
+
+    def nsd_create(self, name):
+        LOG.debug(TST_PACKAGE_NSD)
+        LOG.debug(TST_PACKAGE_VNF_PING)
+        LOG.debug(TST_PACKAGE_VNF_PONG)
+
+    def nsd_list(self):
+        pass
+
+    def nsd_show(self, name):
+        pass
+
+    def nsd_delete(self, name):
+        pass

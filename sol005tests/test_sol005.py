@@ -32,15 +32,9 @@
 import logging
 import os
 from sol005tests import BaseTest
-from sol005tests import fixtures
 
 
 LOG = logging.getLogger(os.path.basename(__file__))
-
-
-TST_PACKAGE_NSD = fixtures.get_file("pingpong_nsd.tar.gz")
-TST_PACKAGE_VNF_PING = fixtures.get_file("ping.tar.gz")
-TST_PACKAGE_VNF_PONG = fixtures.get_file("pong.tar.gz")
 
 
 class Sol005_BaiscTest(BaseTest):
@@ -52,9 +46,16 @@ class Sol005_BaiscTest(BaseTest):
 class Sol005_NsdManagementInterface(BaseTest):
 
     def test_nsd_create(self):
-        LOG.debug(TST_PACKAGE_NSD)
-        LOG.debug(TST_PACKAGE_VNF_PING)
-        LOG.debug(TST_PACKAGE_VNF_PONG)
+        pass
+
+    def test_nsd_list(self):
+        pass
+
+    def test_nsd_show(self):
+        pass
+
+    def test_nsd_delete(self):
+        pass
 
 
 class Sol005_VnfPackageManagementInterface(BaseTest):
