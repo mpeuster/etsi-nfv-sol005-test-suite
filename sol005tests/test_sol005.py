@@ -46,7 +46,13 @@ class Sol005_BaiscTest(BaseTest):
 class Sol005_NsdManagementInterface(BaseTest):
 
     def test_nsd_create(self):
-        pass
+        # create
+        name, passed = self.adaptor.nsd_create()
+        # check
+        self.assertTrue(passed)
+        # cleanup
+        _, passed = self.adaptor.nsd_delete(name)
+        self.assertTrue(passed)
 
     def test_nsd_list(self):
         pass

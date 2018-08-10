@@ -42,6 +42,11 @@ TST_PACKAGE_NSD = fixtures.get_file("osm_pingpong_nsd.tar.gz")
 TST_PACKAGE_VNF_PING = fixtures.get_file("osm_ping.tar.gz")
 TST_PACKAGE_VNF_PONG = fixtures.get_file("osm_pong.tar.gz")
 
+# global OSM-specific constants
+OSM_PINGPONG_NSD_NAME = "pingpong"
+OSM_PING_VNFD_NAME = "ping"
+OSM_PONG_VNFD_NAME = "pong"
+
 
 class OsmAdaptor(BaseAdaptor):
     """
@@ -79,10 +84,15 @@ class OsmAdaptor(BaseAdaptor):
         # does a vnfd list to check connection
         return isinstance(self.osm.vnfd.list(), list)
 
-    def nsd_create(self, name):
-        LOG.debug(TST_PACKAGE_NSD)
-        LOG.debug(TST_PACKAGE_VNF_PING)
-        LOG.debug(TST_PACKAGE_VNF_PONG)
+    def nsd_create(self):
+        # osm requires to first create the constituent VNFs
+        self.osm.vnfd.create(
+            filename=TST_PACKAGE_VNF_PING, overwrite=True)
+        self.osm.vnfd.create(
+            filename=TST_PACKAGE_VNF_PONG, overwrite=True)
+        r = self.osm.nsd.create(
+            filename=TST_PACKAGE_NSD, overwrite=True)
+        return (OSM_PINGPONG_NSD_NAME, r is None)
 
     def nsd_list(self):
         pass
@@ -91,4 +101,8 @@ class OsmAdaptor(BaseAdaptor):
         pass
 
     def nsd_delete(self, name):
-        pass
+        r1 = self.osm.nsd.delete(OSM_PINGPONG_NSD_NAME)
+        r2 = self.osm.vnfd.delete(OSM_PING_VNFD_NAME)
+        r3 = self.osm.vnfd.delete(OSM_PONG_VNFD_NAME)
+        return (name,
+                (r1 is None and r2 is None and r3 is None))

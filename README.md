@@ -1,6 +1,10 @@
 # etsi-nfv-sol005-test-suite
 Tests ETSI NFV SOL005 compatible APIs.
 
+## Notes
+
+* The test suite assumes to always use the same test service for everything: Ping-Pong service with two VNFs. Each adaptor has to come with the corresponding fixtures (e.g., VNFDs, NSDs) for its MANO system to be tested.
+
 ## Install
 
 ### Sol005 Test Suite
