@@ -80,6 +80,28 @@ class OsmAdaptor(BaseAdaptor):
     def setUp(self):
         self.osm = self.osmclient_cls(self.env_conf.get("api_url"))
 
+    def tearDown(self):
+        """
+        Clean up the catalog etc. after every test.
+        """
+        # delete all NSs
+        for ns in self.osm.ns.list():
+            LOG.debug(
+                "tearDown: Deleting NS instance '{}'".format(ns.get("name")))
+            self.osm.nsd.delete(ns.get("name"))
+        # delete all NSDs
+        for nsd in self.osm.nsd.list():
+            LOG.debug("tearDown: Deleting NSD '{}'".format(nsd.get("name")))
+            self.osm.nsd.delete(nsd.get("name"))
+        # delete all VNFDs
+        for vnfd in self.osm.vnfd.list():
+            LOG.debug("tearDown: Deleting VNFD '{}'".format(vnfd.get("name")))
+            self.osm.vnfd.delete(vnfd.get("name"))
+        # delete all VIMs
+        for vim in self.osm.vim.list():
+            LOG.debug("tearDown: Deleting VIM '{}'".format(vim.get("name")))
+            self.osm.nsd.delete(vim.get("name"))
+
     def check_connection(self):
         # does a vnfd list to check connection
         return isinstance(self.osm.vnfd.list(), list)
@@ -95,14 +117,32 @@ class OsmAdaptor(BaseAdaptor):
         return (OSM_PINGPONG_NSD_NAME, r is None)
 
     def nsd_list(self):
-        pass
+        return [nsd.get("name") for nsd in self.osm.nsd.list()]
 
     def nsd_show(self, name):
-        pass
+        r = self.osm.nsd.get(name)
+        return r
 
     def nsd_delete(self, name):
-        r1 = self.osm.nsd.delete(OSM_PINGPONG_NSD_NAME)
-        r2 = self.osm.vnfd.delete(OSM_PING_VNFD_NAME)
-        r3 = self.osm.vnfd.delete(OSM_PONG_VNFD_NAME)
-        return (name,
-                (r1 is None and r2 is None and r3 is None))
+        r = self.osm.nsd.delete(name)
+        return r is None
+
+    def vnfd_create(self, which="ping"):
+        if which == "ping":
+            r = self.osm.vnfd.create(
+                   filename=TST_PACKAGE_VNF_PING, overwrite=True)
+        else:
+            r = self.osm.vnfd.create(
+                    filename=TST_PACKAGE_VNF_PONG, overwrite=True)
+        return (which, r is None)
+
+    def vnfd_list(self):
+        return [vnfd.get("name") for vnfd in self.osm.vnfd.list()]
+
+    def vnfd_show(self, name):
+        r = self.osm.vnfd.get(name)
+        return r
+
+    def vnfd_delete(self, name):
+        r = self.osm.vnfd.delete(name)
+        return r is None

@@ -42,4 +42,8 @@ class BaseAdaptor(object):
         pass
 
     def tearDown(self):
+        """
+        Important: Every adaptor should clean the catalog
+        of its MANO solution on tearDown.
+        """
         pass

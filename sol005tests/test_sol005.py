@@ -46,26 +46,58 @@ class Sol005_BaiscTest(BaseTest):
 class Sol005_NsdManagementInterface(BaseTest):
 
     def test_nsd_create(self):
-        # create
         name, passed = self.adaptor.nsd_create()
-        # check
-        self.assertTrue(passed)
-        # cleanup
-        _, passed = self.adaptor.nsd_delete(name)
         self.assertTrue(passed)
 
     def test_nsd_list(self):
-        pass
+        self.adaptor.nsd_create()
+        r = self.adaptor.nsd_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 1)
 
     def test_nsd_show(self):
-        pass
+        name, _ = self.adaptor.nsd_create()
+        r = self.adaptor.nsd_show(name)
+        self.assertIsNotNone(r)
+        self.assertTrue(isinstance(r, dict))
+        self.assertNotEqual(len(r), 0)
 
     def test_nsd_delete(self):
-        pass
+        name, _ = self.adaptor.nsd_create()
+        r = self.adaptor.nsd_delete(name)
+        self.assertTrue(r)
 
 
 class Sol005_VnfPackageManagementInterface(BaseTest):
-    pass
+
+    def test_vnfd_create(self):
+        name, passed = self.adaptor.vnfd_create()
+        self.assertTrue(passed)
+        return name
+
+    def test_vnfd_list(self):
+        # 1st
+        self.adaptor.vnfd_create()
+        r = self.adaptor.vnfd_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 1)
+        # 2nd
+        self.adaptor.vnfd_create(which="pong")
+        r = self.adaptor.vnfd_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 2)
+
+    def test_vnfd_show(self):
+        name, _ = self.adaptor.vnfd_create()
+        r = self.adaptor.vnfd_show(name)
+        self.assertIsNotNone(r)
+        self.assertTrue(isinstance(r, dict))
+        self.assertNotEqual(len(r), 0)
+
+    def test_vnfd_delete(self):
+        name, _ = self.adaptor.vnfd_create()
+        r = self.adaptor.vnfd_delete(name)
+        self.assertTrue(r)
 
 
 class Sol005_NsLifecycleManagementInterface(BaseTest):
