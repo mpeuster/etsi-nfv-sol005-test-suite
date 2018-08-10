@@ -23,23 +23,28 @@
 # the Horizon 2020 and 5G-PPP programmes. The authors would like to
 # acknowledge the contributions of their colleagues of the SONATA
 # partner consortium (www.5gtango.eu).
+
+#
+# This module implements OSM specific tests that are not part
+# of the official ETSI SOL004.
+#
 import logging
 import os
+from sol005tests import BaseTest
 
 
 LOG = logging.getLogger(os.path.basename(__file__))
 
 
-class BaseAdaptor(object):
+class Osm_BaiscTest(BaseTest):
 
-    def __init__(self, env_conf):
-        self.env_conf = env_conf
-        LOG.info("Initializing '{}' pointing to '{}'"
-                 .format(self.__class__.__name__,
-                         self.env_conf.get("api_url")))
+    def test_connection(self):
+        self.assertTrue(self.adaptor.check_connection())
 
-    def setUp(self):
-        pass
 
-    def tearDown(self):
-        pass
+class OsmVimManagementInterface(BaseTest):
+    pass
+
+
+class OsmVnfManagementInterface(BaseTest):
+    pass

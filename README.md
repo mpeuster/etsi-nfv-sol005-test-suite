@@ -39,8 +39,15 @@ pip install git+https://osm.etsi.org/gerrit/osm/osmclient
 ## Configure
 
 ```sh
+# basic configuration
 export TST_SOL005_ADAPTOR=osm
 export TST_SOL005_API_URL=fgcn-osm1.cs.upb.de
+# VIM configuration (needed if VIM tests should be executed)
+export TST_SOL005_VIM_URL=http://$VIMEMU_HOSTNAME:6001/v2.0
+export TST_SOL005_VIM_TYPE=openstack
+export TST_SOL005_VIM_USER=username
+export TST_SOL005_VIM_PASSWORD=password
+export TST_SOL005_VIM_TENEANT=tenantName
 ```
 
 ## Run the test suite

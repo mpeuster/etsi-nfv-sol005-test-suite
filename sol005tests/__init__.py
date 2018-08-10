@@ -38,17 +38,30 @@ class BaseTest(unittest.TestCase):
         # define global members
         self.adaptor = None
         # get configurations from environment
-        self.env_adaptor = os.environ.get("TST_SOL005_ADAPTOR", "osm")
-        self.env_api_url = os.environ.get("TST_SOL005_API_URL", "127.0.0.1")
+        self.env_conf = dict()
+        self.env_conf["adaptor"] = os.environ.get("TST_SOL005_ADAPTOR", "osm")
+        self.env_conf["api_url"] = os.environ.get(
+            "TST_SOL005_API_URL", "127.0.0.1")
+        self.env_conf["vim_url"] = os.environ.get(
+            "TST_SOL005_VIM_URL", "http://{}:6001/v2.0".format(
+                os.environ.get("VIMEMU_HOSTNAME", "127.0.0.1")))
+        self.env_conf["vim_type"] = os.environ.get(
+            "TST_SOL005_VIM_TYPE", "openstack")
+        self.env_conf["vim_user"] = os.environ.get(
+            "TST_SOL005_VIM_USER", "username")
+        self.env_conf["vim_password"] = os.environ.get(
+            "TST_SOL005_PASSWORD", "password")
+        self.env_conf["vim_tenant"] = os.environ.get(
+            "TST_SOL005_VIM_TENANT", "tenantName")
         # initialize test adaptor
         self._init_adaptor()
         # logging
         LOG.info("Initialized '{}'".format(self.__class__.__name__))
 
     def _init_adaptor(self):
-        if self.env_adaptor == "osm":
+        if self.env_conf.get("adaptor") == "osm":
             from sol005tests.adaptor.osm import OsmAdaptor
-            self.adaptor = OsmAdaptor(self.env_api_url)
+            self.adaptor = OsmAdaptor(self.env_conf)
             return
         LOG.error("TST_SOL005_ADAPTOR={} not implemented. Abort.")
         exit(1)

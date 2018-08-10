@@ -66,7 +66,7 @@ class OsmAdaptor(BaseAdaptor):
         return False
 
     def setUp(self):
-        self.osm = self.osmclient_cls(self.api_url)
+        self.osm = self.osmclient_cls(self.env_conf.get("api_url"))
 
     def check_connection(self):
         # does a vnfd list to check connection

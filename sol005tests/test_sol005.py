@@ -23,6 +23,12 @@
 # the Horizon 2020 and 5G-PPP programmes. The authors would like to
 # acknowledge the contributions of their colleagues of the SONATA
 # partner consortium (www.5gtango.eu).
+
+#
+# This module implements tests for the interfaces that are officially
+# part of the ETSI SOL005 specification. Each high-level interface is
+# encapsulated in its own BaseTest class.
+#
 import logging
 import os
 from sol005tests import BaseTest
@@ -35,3 +41,29 @@ class Sol005_BaiscTest(BaseTest):
 
     def test_connection(self):
         self.assertTrue(self.adaptor.check_connection())
+
+
+class Sol005_NsdManagementInterface(BaseTest):
+    pass
+
+
+class Sol005_VnfPackageManagementInterface(BaseTest):
+    pass
+
+
+class Sol005_NsLifecycleManagementInterface(BaseTest):
+    pass
+
+
+class Sol005_NsPerformanceManagementInterface(BaseTest):
+    """
+    Not yet implemented.
+    """
+    pass
+
+
+class Sol005_NsFaultManagementInterface(BaseTest):
+    """
+    Not yet implemented.
+    """
+    pass
