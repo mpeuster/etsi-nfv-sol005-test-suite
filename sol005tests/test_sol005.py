@@ -125,17 +125,31 @@ class Sol005_NsLifecycleManagementInterface(BaseTest):
         self.assertTrue(isinstance(r, list))
         self.assertEqual(len(r), 0)
         # 1
-        # TODO
+        self.adaptor.ns_create("testlist1")
+        r = self.adaptor.ns_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 1)
+        # 2 (2nd service seems to cause a collision)
+        # self.adaptor.ns_create("testlist2")
+        # r = self.adaptor.ns_list()
+        # self.assertTrue(isinstance(r, list))
+        # self.assertEqual(len(r), 2)
 
-    @unittest.skip("not implemented")
     @pytest.mark.nsdeploy
     def test_ns_show(self):
-        LOG.error("TEST")
+        name = "testshow1"
+        self.adaptor.ns_create(name)
+        r = self.adaptor.ns_show(name)
+        self.assertIsNotNone(r)
+        self.assertTrue(isinstance(r, dict))
+        self.assertNotEqual(len(r), 0)
 
     @pytest.mark.nsdeploy
-    @unittest.skip("not implemented")
     def test_ns_delete(self):
-        pass
+        name = "testdelete1"
+        self.adaptor.ns_create(name)
+        r = self.adaptor.ns_delete(name)
+        self.assertTrue(r)
 
 
 class Sol005_NsPerformanceManagementInterface(BaseTest):

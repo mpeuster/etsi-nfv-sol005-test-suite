@@ -97,19 +97,15 @@ class OsmAdaptor(BaseAdaptor):
         # delete all NSs
         for ns in self.osm.ns.list():
             self.ns_delete(ns.get("name"))
-            self._wait_for_item_absent(self.osm.ns.list, ns.get("name"))
         # delete all NSDs
         for nsd in self.osm.nsd.list():
             self.nsd_delete(nsd.get("name"))
-            self._wait_for_item_absent(self.osm.nsd.list, nsd.get("name"))
         # delete all VNFDs
         for vnfd in self.osm.vnfd.list():
             self.vnfd_delete(vnfd.get("name"))
-            self._wait_for_item_absent(self.osm.vnfd.list, vnfd.get("name"))
         # delete all VIMs
         for vim in self.osm.vim.list():
             self.vim_delete(vim.get("name"))
-            self._wait_for_item_absent(self.osm.vim.list, vim.get("name"))
 
     def check_connection(self):
         # does a vnfd list to check connection
@@ -148,6 +144,7 @@ class OsmAdaptor(BaseAdaptor):
     def vim_delete(self, name):
         LOG.info("OSM deleting VIM '{}'".format(name))
         r = self.osm.vim.delete(name)
+        self._wait_for_item_absent(self.osm.vim.list, name)
         return r is None
 
     def nsd_create(self):
@@ -171,6 +168,7 @@ class OsmAdaptor(BaseAdaptor):
     def nsd_delete(self, name):
         LOG.info("OSM deleting NSD '{}'".format(name))
         r = self.osm.nsd.delete(name)
+        self._wait_for_item_absent(self.osm.nsd.list, name)
         return r is None
 
     def vnfd_create(self, name="ping"):
@@ -194,6 +192,7 @@ class OsmAdaptor(BaseAdaptor):
     def vnfd_delete(self, name):
         LOG.info("OSM deleting VNFD '{}'".format(name))
         r = self.osm.vnfd.delete(name)
+        self._wait_for_item_absent(self.osm.vnfd.list, name)
         return r is None
 
     def _ns_create(self, name, nsd, vim):
@@ -210,9 +209,13 @@ class OsmAdaptor(BaseAdaptor):
     def ns_create(self, name):
         LOG.info("OSM creating NS: {}".format(name))
         # 1. create a vim
-        vim, _ = self.vim_create("testvim")
+        vim = "testvim"
+        if vim not in self.vim_list():
+            vim, _ = self.vim_create(vim)
         # 2. on-board VNFDs and NSD
-        nsd, _ = self.nsd_create()
+        nsd = OSM_PINGPONG_NSD_NAME
+        if nsd not in self.nsd_list():
+            nsd, _ = self.nsd_create()
         # 4. instantiate the service
         self._ns_create(name, nsd, vim)
         # 5. wait for instantiation  # TODO status
@@ -224,11 +227,13 @@ class OsmAdaptor(BaseAdaptor):
         return [ns.get("name") for ns in self.osm.ns.list()]
 
     def ns_show(self, name):
-        pass
+        r = self.osm.ns.get(name)
+        return r
 
     def ns_delete(self, name):
         LOG.info("OSM deleting NS instance '{}'".format(name))
         r = self.osm.ns.delete(name)
+        self._wait_for_item_absent(self.osm.ns.list, name)
         return r is None
 
     def vnf_list(self):

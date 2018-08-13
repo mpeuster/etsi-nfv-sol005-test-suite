@@ -87,4 +87,3 @@ class OsmVnfManagementInterface(BaseTest):
     @pytest.mark.nsdeploy
     def test_vnf_show(self):
         pass
-    
