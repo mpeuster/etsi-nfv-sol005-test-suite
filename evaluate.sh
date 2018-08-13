@@ -1,5 +1,6 @@
 #!/bin/bash
 rm -f durations.result
+source .local_env_rc
 
 for i in `seq 1 10`;
 do
