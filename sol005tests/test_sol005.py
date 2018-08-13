@@ -31,7 +31,6 @@
 #
 import logging
 import os
-import unittest
 import pytest
 from sol005tests import BaseTest
 

@@ -122,6 +122,14 @@ class OsmAdaptor(BaseAdaptor):
          'vim-password': 'password',
          'vim-username': 'username'}
         """
+        def parse_status(i):
+            # Workaround: we need an additional request to get the status
+            i = self.vim_show(i.get("name"))
+            admin = i.get("_admin")
+            if admin is not None:
+                return admin.get("detailed-status", "not-found")
+            return "not-found"
+
         vim_access = {"vim-type": self.env_conf.get("vim_type"),
                       "vim-url": self.env_conf.get("vim_url"),
                       "vim-tenant-name": self.env_conf.get("vim_tenant"),
@@ -130,12 +138,14 @@ class OsmAdaptor(BaseAdaptor):
                       "config": None,
                       "description": "etsi-sol005-test-suite-vim"}
         r = self.osm.vim.create(name, vim_access)
-        self._wait_for_item(self.osm.vim.list, name)
+        self._wait_for_item(self.osm.vim.list, name,
+                            status="Done", status_field=parse_status)
         LOG.info("OSM created VIM: {} using {}".format(name, vim_access))
         return (name, r is None)
 
     def vim_list(self):
-        return [vim.get("name") for vim in self.osm.vim.list()]
+        return [self.osm.vim.get(vim.get("name"))
+                for vim in self.osm.vim.list()]
 
     def vim_show(self, name):
         r = self.osm.vim.get(name)
@@ -207,6 +217,10 @@ class OsmAdaptor(BaseAdaptor):
         subprocess.check_call(cmd, shell=True)
 
     def ns_create(self, name):
+
+        def parse_status(i):
+            return i.get("operational-status", "not-found")
+
         LOG.info("OSM creating NS: {}".format(name))
         # 1. create a vim
         vim = "testvim"
@@ -218,8 +232,9 @@ class OsmAdaptor(BaseAdaptor):
             nsd, _ = self.nsd_create()
         # 4. instantiate the service
         self._ns_create(name, nsd, vim)
-        # 5. wait for instantiation  # TODO status
-        self._wait_for_item(self.osm.ns.list, name, status="running")
+        # 5. wait for instantiation
+        self._wait_for_item(self.osm.ns.list, name,
+                            status="running", status_field=parse_status)
         # 6. return result
         return (name, True)
 
@@ -245,7 +260,7 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def _wait_for_item(self, func_list, item_name,
-                       status=None, status_field="operational-status",
+                       status=None, status_field=None,
                        timeout=30, wait=0.5, negate=False):
         """
         Sync. helper method that polls func_list(),e.g., vim-list on the OSM
@@ -266,15 +281,14 @@ class OsmAdaptor(BaseAdaptor):
                         if item_name in it.get("name"):
                             # found: stop and return
                             LOG.debug("Found item: {}".format(it.get("name")))
-                            if status is not None:
-                                LOG.debug("Field '{}' is '{}' should '{}'"
-                                          .format(status_field,
-                                                  it.get(status_field),
+                            if status is not None and status_field is not None:
+                                LOG.debug("Status is '{}' should '{}'"
+                                          .format(status_field(it),
                                                   status))
                                 # also check status
-                                if status in it.get(status_field):
+                                if status in status_field(it):
                                     return it.get("name")
-                                if "fail" in it.get(status_field):
+                                if "fail" in status_field(it):
                                     raise OsmDeploymentException(
                                         "{} failed".format(item_name))
                             else:
@@ -284,7 +298,7 @@ class OsmAdaptor(BaseAdaptor):
                                   .format(item_name))
 
     def _wait_for_item_absent(self, func_list, item_name,
-                              status=None, status_field="operational-status",
+                              status=None, status_field=None,
                               timeout=30, wait=0.5):
         self._wait_for_item(func_list, item_name,
                             status, status_field,
