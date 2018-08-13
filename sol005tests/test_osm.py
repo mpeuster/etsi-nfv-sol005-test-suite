@@ -82,8 +82,23 @@ class OsmVnfManagementInterface(BaseTest):
 
     @pytest.mark.nsdeploy
     def test_vnf_list(self):
-        pass
+        # 0
+        r = self.adaptor.vnf_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 0)
+        # 1
+        self.adaptor.ns_create("testvnf1")
+        r = self.adaptor.vnf_list()
+        self.assertTrue(isinstance(r, list))
+        self.assertEqual(len(r), 2)
 
     @pytest.mark.nsdeploy
     def test_vnf_show(self):
-        pass
+        name = "testvnf2"
+        self.adaptor.ns_create(name)
+        # vnfs can only be identified by _id
+        vnf1 = self.adaptor.vnf_list()[0]
+        r = self.adaptor.vnf_show(vnf1)
+        self.assertIsNotNone(r)
+        self.assertTrue(isinstance(r, dict))
+        self.assertNotEqual(len(r), 0)

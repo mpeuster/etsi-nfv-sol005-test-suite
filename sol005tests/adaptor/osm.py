@@ -237,10 +237,12 @@ class OsmAdaptor(BaseAdaptor):
         return r is None
 
     def vnf_list(self):
-        pass
+        # vnfs can only be identified by _id
+        return [vnf.get("_id") for vnf in self.osm.vnf.list()]
 
     def vnf_show(self, name):
-        pass
+        r = self.osm.vnf.get(name)
+        return r
 
     def _wait_for_item(self, func_list, item_name,
                        status=None, status_field="operational-status",
