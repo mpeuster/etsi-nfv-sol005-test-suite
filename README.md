@@ -69,6 +69,9 @@ pytest -m "not nsdeploy"
 # filter by test name
 pytest --log-cli-level DEBUG -k "test_ns_create"
 
+# report test times
+pytest --durations=0
+
 # if you have version conflicts, try:
 python3 -m pytest
 ```
