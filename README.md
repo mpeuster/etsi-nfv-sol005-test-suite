@@ -63,6 +63,12 @@ pytest
 # enable logging output
 pytest --log-cli-level DEBUG
 
+# filter by markers (skip tests that deploy a NS):
+pytest -m "not nsdeploy"
+
+# filter by test name
+pytest --log-cli-level DEBUG -k "test_ns_create"
+
 # if you have version conflicts, try:
 python3 -m pytest
 ```

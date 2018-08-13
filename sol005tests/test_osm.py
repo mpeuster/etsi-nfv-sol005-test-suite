@@ -30,6 +30,7 @@
 #
 import logging
 import os
+import pytest
 from sol005tests import BaseTest
 
 
@@ -78,4 +79,12 @@ class OsmVimManagementInterface(BaseTest):
 
 
 class OsmVnfManagementInterface(BaseTest):
-    pass
+
+    @pytest.mark.nsdeploy
+    def test_vnf_list(self):
+        pass
+
+    @pytest.mark.nsdeploy
+    def test_vnf_show(self):
+        pass
+    

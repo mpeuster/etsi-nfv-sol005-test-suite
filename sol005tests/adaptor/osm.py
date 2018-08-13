@@ -50,6 +50,14 @@ OSM_PING_VNFD_NAME = "ping"
 OSM_PONG_VNFD_NAME = "pong"
 
 
+class OsmTimeoutException(BaseException):
+    pass
+
+
+class OsmDeploymentException(BaseException):
+    pass
+
+
 class OsmAdaptor(BaseAdaptor):
     """
     Adaptor uses osmclient to connect to OSM's NBI.
@@ -89,15 +97,19 @@ class OsmAdaptor(BaseAdaptor):
         # delete all NSs
         for ns in self.osm.ns.list():
             self.ns_delete(ns.get("name"))
+            self._wait_for_item_absent(self.osm.ns.list, ns.get("name"))
         # delete all NSDs
         for nsd in self.osm.nsd.list():
             self.nsd_delete(nsd.get("name"))
+            self._wait_for_item_absent(self.osm.nsd.list, nsd.get("name"))
         # delete all VNFDs
         for vnfd in self.osm.vnfd.list():
             self.vnfd_delete(vnfd.get("name"))
+            self._wait_for_item_absent(self.osm.vnfd.list, vnfd.get("name"))
         # delete all VIMs
         for vim in self.osm.vim.list():
             self.vim_delete(vim.get("name"))
+            self._wait_for_item_absent(self.osm.vim.list, vim.get("name"))
 
     def check_connection(self):
         # does a vnfd list to check connection
@@ -122,7 +134,8 @@ class OsmAdaptor(BaseAdaptor):
                       "config": None,
                       "description": "etsi-sol005-test-suite-vim"}
         r = self.osm.vim.create(name, vim_access)
-        LOG.debug("OSM created VIM: {} using {}".format(name, vim_access))
+        self._wait_for_item(self.osm.vim.list, name)
+        LOG.info("OSM created VIM: {} using {}".format(name, vim_access))
         return (name, r is None)
 
     def vim_list(self):
@@ -133,7 +146,7 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def vim_delete(self, name):
-        LOG.debug("OSM deleting VIM '{}'".format(name))
+        LOG.info("OSM deleting VIM '{}'".format(name))
         r = self.osm.vim.delete(name)
         return r is None
 
@@ -141,10 +154,11 @@ class OsmAdaptor(BaseAdaptor):
         # osm requires to first create the constituent VNFs
         name = OSM_PINGPONG_NSD_NAME
         self.vnfd_create()
-        self.vnfd_create(which="pong")
+        self.vnfd_create(name="pong")
         r = self.osm.nsd.create(
             filename=TST_PACKAGE_NSD, overwrite=True)
-        LOG.debug("OSM created NSD: {}".format(name))
+        self._wait_for_item(self.osm.nsd.list, name)
+        LOG.info("OSM created NSD: {}".format(name))
         return (name, r is None)
 
     def nsd_list(self):
@@ -155,19 +169,20 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def nsd_delete(self, name):
-        LOG.debug("OSM deleting NSD '{}'".format(name))
+        LOG.info("OSM deleting NSD '{}'".format(name))
         r = self.osm.nsd.delete(name)
         return r is None
 
-    def vnfd_create(self, which="ping"):
-        if which == "ping":
+    def vnfd_create(self, name="ping"):
+        if name == "ping":
             r = self.osm.vnfd.create(
                    filename=TST_PACKAGE_VNF_PING, overwrite=True)
         else:
             r = self.osm.vnfd.create(
                     filename=TST_PACKAGE_VNF_PONG, overwrite=True)
-        LOG.debug("OSM created VNFD: {}".format(which))
-        return (which, r is None)
+        self._wait_for_item(self.osm.vnfd.list, name)
+        LOG.info("OSM created VNFD: {}".format(name))
+        return (name, r is None)
 
     def vnfd_list(self):
         return [vnfd.get("name") for vnfd in self.osm.vnfd.list()]
@@ -177,27 +192,32 @@ class OsmAdaptor(BaseAdaptor):
         return r
 
     def vnfd_delete(self, name):
-        LOG.debug("OSM deleting VNFD '{}'".format(name))
+        LOG.info("OSM deleting VNFD '{}'".format(name))
         r = self.osm.vnfd.delete(name)
         return r is None
 
+    def _ns_create(self, name, nsd, vim):
+        """
+        Workaround, because the method:
+        self.osm.ns.create(OSM_PINGPONG_NSD_NAME, name, vim)
+        does not seem to work.
+        """
+        cmd = ("osm ns-create --ns_name {} --nsd_name {} --vim_account {}"
+               .format(name, nsd, vim))
+        LOG.debug("executing: {}".format(cmd))
+        subprocess.check_call(cmd, shell=True)
+
     def ns_create(self, name):
+        LOG.info("OSM creating NS: {}".format(name))
         # 1. create a vim
         vim, _ = self.vim_create("testvim")
         # 2. on-board VNFDs and NSD
         nsd, _ = self.nsd_create()
-        time.sleep(5)
-        # 3. instantiate the service
-        # r = self.osm.ns.create(OSM_PINGPONG_NSD_NAME, name, vim)
-        # above Python call does not work, but this one does ...:
-        cmd = ("osm ns-create --nsd_name {} --ns_name {} --vim_account {}"
-               .format(nsd, name, vim))
-        LOG.debug("executing: {}".format(cmd))
-        subprocess.check_call(cmd, shell=True)
-        # 4. wait for instantiation
-        time.sleep(60)
-        # 5. return result
-        LOG.debug("OSM created NS: {}".format(name))
+        # 4. instantiate the service
+        self._ns_create(name, nsd, vim)
+        # 5. wait for instantiation  # TODO status
+        self._wait_for_item(self.osm.ns.list, name, status="running")
+        # 6. return result
         return (name, True)
 
     def ns_list(self):
@@ -207,7 +227,7 @@ class OsmAdaptor(BaseAdaptor):
         pass
 
     def ns_delete(self, name):
-        LOG.debug("OSM deleting NS instance '{}'".format(name))
+        LOG.info("OSM deleting NS instance '{}'".format(name))
         r = self.osm.ns.delete(name)
         return r is None
 
@@ -216,3 +236,49 @@ class OsmAdaptor(BaseAdaptor):
 
     def vnf_show(self, name):
         pass
+
+    def _wait_for_item(self, func_list, item_name,
+                       status=None, status_field="operational-status",
+                       timeout=30, wait=0.5, negate=False):
+        """
+        Sync. helper method that polls func_list(),e.g., vim-list on the OSM
+        API until item_name is found or timeout (s) is reached.
+        """
+        start = time.time()
+        while(time.time() - start < timeout):
+            LOG.debug("Waiting for item: {} since {:4.2f}s"
+                      .format(item_name, time.time() - start))
+            if negate:
+                # check if item is gone
+                if item_name not in [it.get("name")
+                                     for it in func_list()]:
+                    return item_name
+            else:
+                for it in func_list():
+                    if "name" in it:
+                        if item_name in it.get("name"):
+                            # found: stop and return
+                            LOG.debug("Found item: {}".format(it.get("name")))
+                            if status is not None:
+                                LOG.debug("Field '{}' is '{}' should '{}'"
+                                          .format(status_field,
+                                                  it.get(status_field),
+                                                  status))
+                                # also check status
+                                if status in it.get(status_field):
+                                    return it.get("name")
+                                if "fail" in it.get(status_field):
+                                    raise OsmDeploymentException(
+                                        "{} failed".format(item_name))
+                            else:
+                                return it.get("name")
+            time.sleep(wait)
+        raise OsmTimeoutException("Item '{}' was not found in time"
+                                  .format(item_name))
+
+    def _wait_for_item_absent(self, func_list, item_name,
+                              status=None, status_field="operational-status",
+                              timeout=30, wait=0.5):
+        self._wait_for_item(func_list, item_name,
+                            status, status_field,
+                            timeout, wait, negate=True)

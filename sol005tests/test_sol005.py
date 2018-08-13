@@ -31,6 +31,8 @@
 #
 import logging
 import os
+import unittest
+import pytest
 from sol005tests import BaseTest
 
 
@@ -91,7 +93,7 @@ class Sol005_VnfPackageManagementInterface(BaseTest):
         self.assertTrue(isinstance(r, list))
         self.assertEqual(len(r), 1)
         # 2
-        self.adaptor.vnfd_create(which="pong")
+        self.adaptor.vnfd_create(name="pong")
         r = self.adaptor.vnfd_list()
         self.assertTrue(isinstance(r, list))
         self.assertEqual(len(r), 2)
@@ -111,10 +113,12 @@ class Sol005_VnfPackageManagementInterface(BaseTest):
 
 class Sol005_NsLifecycleManagementInterface(BaseTest):
 
+    @pytest.mark.nsdeploy
     def test_ns_create(self):
         name, passed = self.adaptor.ns_create("test1")
         self.assertTrue(passed)
 
+    @pytest.mark.nsdeploy
     def test_ns_list(self):
         # 0
         r = self.adaptor.ns_list()
@@ -123,9 +127,13 @@ class Sol005_NsLifecycleManagementInterface(BaseTest):
         # 1
         # TODO
 
+    @unittest.skip("not implemented")
+    @pytest.mark.nsdeploy
     def test_ns_show(self):
-        pass
+        LOG.error("TEST")
 
+    @pytest.mark.nsdeploy
+    @unittest.skip("not implemented")
     def test_ns_delete(self):
         pass
 
