@@ -1,0 +1,140 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.6.5, pytest-3.7.1, py-1.5.4, pluggy-0.7.1
+rootdir: /Users/manuel/tango/etsi-nfv-sol005-test-suite, inifile: pytest.ini
+collected 20 items
+
+sol005tests/test_osm.py .......                                          [ 35%]
+sol005tests/test_sol005.py .............                                 [100%]
+
+============================ slowest test durations ============================
+9.80s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+9.49s call     sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+9.49s call     sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+9.47s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+9.43s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+9.36s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+1.76s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+1.01s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.96s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.93s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+0.92s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.92s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.83s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.79s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.73s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.43s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+0.41s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.41s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.23s call     sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.20s call     sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.04s setup    sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.00s teardown sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+0.00s setup    sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.00s teardown sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.00s teardown sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.00s setup    sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.00s teardown sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+========================== 20 passed in 67.68 seconds ==========================
+============================= test session starts ==============================
+platform darwin -- Python 3.6.5, pytest-3.7.1, py-1.5.4, pluggy-0.7.1
+rootdir: /Users/manuel/tango/etsi-nfv-sol005-test-suite, inifile: pytest.ini
+collected 20 items
+
+sol005tests/test_osm.py .......                                          [ 35%]
+sol005tests/test_sol005.py .............                                 [100%]
+
+============================ slowest test durations ============================
+10.07s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+9.65s call     sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+9.58s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+9.57s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+9.49s call     sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+9.48s call     sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+1.78s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+0.98s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.95s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.94s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.92s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.92s call     sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+0.91s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.91s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.87s call     sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.45s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+0.42s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.40s call     sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.23s call     sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.20s call     sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.04s setup    sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.00s teardown sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+0.00s teardown sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_create
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+0.00s teardown sol005tests/test_osm.py::Osm_BaiscTest::test_connection
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_list
+0.00s setup    sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_delete
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_list
+0.00s teardown sol005tests/test_sol005.py::Sol005_BaiscTest::test_connection
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsLifecycleManagementInterface::test_ns_show
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.00s setup    sol005tests/test_osm.py::OsmVnfManagementInterface::test_vnf_list
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_delete
+0.00s setup    sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_list
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_create
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_list
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_NsdManagementInterface::test_nsd_show
+0.00s teardown sol005tests/test_sol005.py::Sol005_VnfPackageManagementInterface::test_vnfd_create
+0.00s teardown sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_create
+0.00s setup    sol005tests/test_osm.py::OsmVimManagementInterface::test_vim_delete
+========================== 20 passed in 68.84 seconds ==========================
