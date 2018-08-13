@@ -6,6 +6,4 @@ do
     echo "Running test run" $i
     pytest --durations=0 -q >> durations.result
     sleep 5
-done    
-
-
+done
